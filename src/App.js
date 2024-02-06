@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.css'
+import products from './product.json'
+import Header from './components/header';
+import List from './components/list';
 
-function App() {
+
+const App = () => {
+  const [data, setData] = useState(products);
+
+  const filterDiscountProduct = () => {
+    const newArr = products.filter(item => item.discount !== null)
+    //не взяли data из-за того что обратно были все продукты
+    setData(newArr)
+  }
+  const productAll = () => {
+    setData(products)
+    //обратно все продукты
+  }
+  const filterCategory = (id) => {
+    console.log(id);
+    const newArr = products.filter(item => item.category_id === id)
+    setData(newArr)
+  }
+  const searchProduct = (text) => {
+    const newArr = products.filter(item => item.title.toLowerCase().indexOf(text.toLowerCase()) > -1);
+    //item.title.toLowerCase().indexOf -делаем маленькие буквы и находим индекс букв
+    //(text.toLowerCase()) > -1  -- поисковые буквы тоже делаем toLowerCase и ищем иначе вернет -1массив(нету иакого)
+    setData(newArr);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header
+        searchProduct={searchProduct}
+        productAll={productAll}
+        filterCategory={filterCategory}
+        filterDiscountProduct={filterDiscountProduct} />
+      <List data={data} />
     </div>
   );
-}
+};
 
 export default App;
